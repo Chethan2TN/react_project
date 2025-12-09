@@ -1,57 +1,52 @@
-import React from 'react'
-import Lightroom from 'react-lightbox-gallery'
-import GalleryImg1 from "../../assets/images/gallery/g1.jpg"
-import GalleryImg3 from "../../assets/images/gallery/g3.jpg"
-import GalleryImg4 from "../../assets/images/gallery/g4.jpg"
-import GalleryImg6 from "../../assets/images/gallery/g6.jpg"
-import GalleryImg7 from "../../assets/images/gallery/g7.jpg"
+import React, { useState } from "react";
+import Lightbox from "yet-another-react-lightbox";
+import Captions from "yet-another-react-lightbox/plugins/captions";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 
+export default function Gallery() {
+  const [open, setOpen] = useState(false);
+  const [index, setIndex] = useState(0);
 
-const Gallery = () => {
+  // Gallery images with captions
+  const slides = [
+    { src: "chethan.jpg", description: "Beautiful sunset at the beach" },
+    { src: "/images/travel2.jpg", description: "Mountain hiking adventure" },
+    { src: "/images/travel3.jpg", description: "City skyline at night" },
+    { src: "/images/travel4.jpg", description: "Historical monument visit" },
+  ];
 
-    var images = [
-        {
-            src: GalleryImg1,
-            desc: "Person wearing shoes",
-            sub: "Gift Habeshaw"
-        },
-        {
-            src: GalleryImg3,
-            desc: "Blonde woman wearing sunglasses smiling at the camera ",
-            sub: "Dmitriy Frantsev"
-        },
-        {
-            src: GalleryImg6,
-            sub: "Harry Cunningham"
-        },
-        {
-            src: GalleryImg4,
-            desc: "Jaipur , Rajasthan India",
-            sub: "Liam Baldock"
-        },
-        {
-            src: GalleryImg7,
-            sub: "Verne Ho"
-        },
-        {
-            src: GalleryImg6,
-            desc: "Rann of kutch , India",
-            sub: "Hari Nandakumar"
-        },
-    ];
+  return (
+    <div className="p-6">
+      {/* Grid of thumbnails */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {slides.map((slide, i) => (
+          <div key={i} className="relative group">
+            <img
+              src={slide.src}
+              alt={slide.description}
+              className="w-full h-40 object-cover rounded-xl shadow-md cursor-pointer transition-transform transform hover:scale-105"
+              onClick={() => {
+                setIndex(i);
+                setOpen(true);
+              }}
+            />
+            {/* Caption under thumbnail */}
+            <p className="text-center mt-2 text-sm text-gray-700">{slide.description}</p>
+          </div>
+        ))}
+      </div>
 
-    var settings = {
-        columnCount: {
-            default: 3,
-            mobile: 2,
-            tab: 3
-        },
-        mode: "dark",
-        enableZoom:false,
-    };
-    return (
-        <Lightroom images={images} settings={settings} />
-   );
+      {/* Lightbox with navigation + captions */}
+      {open && (
+        <Lightbox
+          open={open}
+          close={() => setOpen(false)}
+          index={index}
+          slides={slides}
+          plugins={[Captions]}
+        />
+      )}
+    </div>
+  );
 }
-
-export default Gallery
